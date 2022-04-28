@@ -4,20 +4,20 @@ from typing import List, Dict, Any, Optional
 
 from src.rcitem import RCItem, AnnotatedStr
 
-# loc_fn = dataclasses._create_fn
-#
-#
-# def dc_create_fn(name, args, body, *posargs, **kwargs):
-#     if name == '__init__':
-#         if dataclasses._POST_INIT_NAME in body[-1]:
-#             pi_parms = body[-1].rsplit(')', 1)[0]
-#             body[-1] = pi_parms + ('' if pi_parms[-1] == '(' else ',') + ' **kwargs)'
-#         return loc_fn(name, list(args) + ["**kwargs"], body, *posargs, **kwargs)
-#     else:
-#         return loc_fn(name, args, body, *posargs, **kwargs)
-#
-#
-# dataclasses._create_fn = dc_create_fn
+loc_fn = dataclasses._create_fn
+
+
+def dc_create_fn(name, args, body, *posargs, **kwargs):
+    if name == '__init__':
+        if dataclasses._POST_INIT_NAME in body[-1]:
+            pi_parms = body[-1].rsplit(')', 1)[0]
+            body[-1] = pi_parms + ('' if pi_parms[-1] == '(' else ',') + ' **kwargs)'
+        return loc_fn(name, list(args) + ["**kwargs"], body, *posargs, **kwargs)
+    else:
+        return loc_fn(name, args, body, *posargs, **kwargs)
+
+
+dataclasses._create_fn = dc_create_fn
 
 
 @dataclasses.dataclass
